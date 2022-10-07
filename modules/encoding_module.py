@@ -43,23 +43,6 @@ class plEncodingModule(pl.LightningModule):
         return Adam(self.student.parameters(), lr=self.lr)
 
     def training_step(self, batch, batch_idx):
-        # x = batch[0] # x: (B, C, T)
-        # x_masked = self.masking_func(x, self.masking_percentage)
-        # K = random.randint(1, x.shape[1]-1)
-        # c_T, x_pred_T, x_T = self.teacher(x, K)
-        # c_S, x_pred_S, x_S = self.student(x_masked, K)
-
-        # loss_tc_S = self.tc_criterion(x_pred_S, x_T, 1)
-        # loss_tc_T = self.tc_criterion(x_pred_T, x_S, 1)
-        # loss_cc = self.cc_criterion(c_S, c_T, 1)
-
-        # loss = loss_tc_S + loss_tc_T + self.lam*loss_cc
-        
-        # self.log("train_loss", loss)
-        # self.log("train_loss_tc_S", loss_tc_S)
-        # self.log("train_loss_tc_T", loss_tc_T)
-        # self.log("train_loss_cc", loss_cc)
-        # return {'loss': loss}
         loss = self.forward_iteration(batch, batch_idx, "train")
         return {'loss': loss}
 
@@ -71,23 +54,6 @@ class plEncodingModule(pl.LightningModule):
                 )
 
     def validation_step(self, batch, batch_idx):
-        # x = batch[0]
-        # x_masked = self.masking_func(x, self.masking_percentage)
-        # K = random.randint(1, x.shape[1]-1)
-        # c_T, x_pred_T, x_T = self.teacher(x, K)
-        # c_S, x_pred_S, x_S = self.student(x_masked, K)
-
-        # loss_tc_S = self.tc_criterion(x_pred_S, x_T, 1)
-        # loss_tc_T = self.tc_criterion(x_pred_T, x_S, 1)
-        # loss_cc = self.cc_criterion(c_S, c_T, 1)
-
-        # loss = loss_tc_S + loss_tc_T + self.lam*loss_cc
-        
-        # self.log("val_loss", loss)
-        # self.log("val_loss_tc_S", loss_tc_S)
-        # self.log("val_loss_tc_T", loss_tc_T)
-        # self.log("val_loss_cc", loss_cc)
-        # return loss
         return self.forward_iteration(batch, batch_idx, "val")
 
     def forward_iteration(self, batch, batch_idx, mode):
