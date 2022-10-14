@@ -9,6 +9,7 @@ if __name__ == "__main__":
     parser.add_argument("n_head_token_enc", type=int, help="number of heads of the token encoder")
     parser.add_argument("n_head_context_enc", type=int, help="number of heads of the context encoder")
     parser.add_argument("depth_context_enc", type=int, help="depth of the context encoder")
+    parser.add_argument("max_predict_len", type=int, help="maximum future timesteps to predict")
     
     parser.add_argument("lr", type=float, help="used learning rate for optimization")
     parser.add_argument("tau", type=float, help="momentum value")

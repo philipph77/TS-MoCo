@@ -59,7 +59,7 @@ class plEncodingModule(pl.LightningModule):
     def forward_iteration(self, batch, batch_idx, mode):
         x = batch[0]
         x_masked = self.masking_func(x, self.masking_percentage)
-        K = random.randint(1, x.shape[1]-1)
+        K = random.randint(1, self.student.max_predict_len)
         c_T, x_pred_T, x_T = self.teacher(x, K)
         c_S, x_pred_S, x_S = self.student(x_masked, K)
 

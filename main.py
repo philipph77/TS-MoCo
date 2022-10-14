@@ -45,7 +45,8 @@ def main(args):
         embedding_dim=args.embedding_dim,
         n_head_token_enc=args.n_head_token_enc,
         n_head_context_enc=args.n_head_context_enc,
-        depth_context_enc=args.depth_context_enc
+        depth_context_enc=args.depth_context_enc,
+        max_predict_len=args.max_predict_len
         )
     classifier = DenseClassifier(in_features=args.embedding_dim, out_features=datamodule.n_classes)
 
@@ -126,6 +127,7 @@ if __name__ == "__main__":
         "n_head_token_enc": 10,
         "n_head_context_enc": 10,
         "depth_context_enc": 4,
+        "max_predict_len": 6,
         "lr": 1e-4,
         "tau": 0.9,
         "lam": 1,

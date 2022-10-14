@@ -7,7 +7,8 @@ if __name__ == '__main__':
         embedding_dim=50,
         n_head_token_enc=10,
         n_head_context_enc=10,
-        depth_context_enc=4
+        depth_context_enc=4,
+        max_predict_len=6
     )
 
     encoder_module = plEncodingModule(

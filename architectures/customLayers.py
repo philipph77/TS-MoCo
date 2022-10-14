@@ -9,4 +9,4 @@ class TemporalSplit(nn.Identity):
         self.layer = nn.Identity()
 
     def forward(self, input, K):
-        return self.layer(input[:,:K,:]), self.layer(input[:,K:,:])
+        return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])

@@ -6,8 +6,9 @@ from .customLayers import TemporalSplit
 
 
 class TSMC(nn.Module):
-    def __init__(self, input_features: int, embedding_dim: int, n_head_token_enc: int, n_head_context_enc, depth_context_enc) -> None:
+    def __init__(self, input_features: int, embedding_dim: int, n_head_token_enc: int, n_head_context_enc: int, depth_context_enc: int, max_predict_len: int) -> None:
         super(TSMC, self).__init__()
+        self.max_predict_len = max_predict_len
         self.token_encoder = TokenPosTransformerEncoder(
             input_features,
             embedding_dim,
@@ -21,8 +22,7 @@ class TSMC(nn.Module):
             depth_context_enc
         )
         self.temporal_split = TemporalSplit()
-        max_seq_len = 400
-        self.prediction_heads = nn.ModuleList([nn.Linear(embedding_dim, embedding_dim) for i in range(max_seq_len)])
+        self.prediction_heads = nn.ModuleList([nn.Linear(embedding_dim, embedding_dim) for i in range(self.max_predict_len)])
 
     def forward(self, x: torch.tensor, K: int):
         tokens, _ = self.token_encoder(x)
