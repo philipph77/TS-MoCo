@@ -25,7 +25,7 @@ class OnetoManyGRU(nn.Module):
         else:
             batch_size = c.size(1)
             x_k = torch.zeros(1, batch_size, self.embedding_dim, device=c.device)
-        h_k = c.unsqueeze(0)
+        h_k = c.unsqueeze(0).contiguous()
 
         y_out = []
         for k in range(K):
