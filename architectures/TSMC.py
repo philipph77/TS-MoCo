@@ -2,7 +2,7 @@ from turtle import forward
 import torch
 import torch.nn as nn
 from architectures.transformer import TokenPosTransformerEncoder, CLSTransformerEncoder, TransformerEncoder
-from .customLayers import TemporalSplit
+from .customLayers import TemporalSplit, OnetoManyGRU
 
 
 class TSMC(nn.Module):
@@ -22,14 +22,14 @@ class TSMC(nn.Module):
             depth_context_enc
         )
         self.temporal_split = TemporalSplit()
-        self.prediction_heads = nn.ModuleList([nn.Linear(embedding_dim, embedding_dim) for i in range(self.max_predict_len)])
+        self.prediction_head = OnetoManyGRU(embedding_dim, batch_first=True)
 
     def forward(self, x: torch.tensor, K: int):
         tokens, _ = self.token_encoder(x)
         signal, target = self.temporal_split(tokens, K)
         _, context = self.context_encoder(signal)
         if target.shape[1] > 0:
-            prediction = torch.stack([prediction_head(context) for prediction_head in self.prediction_heads][:target.shape[1]], dim=1)
+            prediction = self.prediction_head(context, K)
         else:
             prediction = None
 
