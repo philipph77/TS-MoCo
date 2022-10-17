@@ -21,10 +21,10 @@ class OnetoManyGRU(nn.Module):
     def forward(self, c: torch.Tensor, K: int) -> torch.Tensor:
         if self.batch_first:
             batch_size = c.size(0)    
-            x_k = torch.zeros(batch_size, 1, self.embedding_dim)
+            x_k = torch.zeros(batch_size, 1, self.embedding_dim, device=c.device)
         else:
             batch_size = c.size(1)
-            x_k = torch.zeros(1, batch_size, self.embedding_dim)
+            x_k = torch.zeros(1, batch_size, self.embedding_dim, device=c.device)
         h_k = c.unsqueeze(0)
 
         y_out = []
