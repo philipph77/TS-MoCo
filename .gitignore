@@ -1,11 +1,10 @@
 __pycache__/
 *.pyc
-
 .vscode
 .DS_STORE
-
 /.DS_Store
 
+analysis
 playground
 playground/*
 
