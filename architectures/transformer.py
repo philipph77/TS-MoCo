@@ -5,6 +5,7 @@ from .positionalEncoder import PositionalEncoder
 class TransformerEncoder(nn.Module):
     def __init__(self, use_tokenizer: bool, use_cls_token: bool, use_pos_embedding: bool, input_features: int, embedding_dim: int, n_head: int, depth: int) -> None:
         super(TransformerEncoder, self).__init__()
+        if not(input_features==embedding_dim) and not use_tokenizer: raise ValueError("Tokenizer must be used if input_features does not match embedding_dim")
         self.use_tokenizer = use_tokenizer
         self.use_cls_token = use_cls_token
         self.use_pos_embedding = use_pos_embedding
