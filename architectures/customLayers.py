@@ -12,11 +12,15 @@ class TemporalSplit(nn.Identity):
         return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])
 
 class OnetoManyGRU(nn.Module):
-    def __init__(self, embedding_dim: int, batch_first: bool = True):
+    def __init__(self, embedding_dim: int, output_dim: int, batch_first: bool = True):
         super(OnetoManyGRU, self).__init__()
         self.embedding_dim = embedding_dim
         self.batch_first = batch_first
         self.prediction_head = nn.GRU(embedding_dim, embedding_dim, batch_first=batch_first)
+        if embedding_dim == output_dim:
+            self.untokenizer = nn.Identity()
+        else:
+            self.untokenizer = nn.Linear(embedding_dim, output_dim)
 
     def forward(self, c: torch.Tensor, K: int) -> torch.Tensor:
         if self.batch_first:
@@ -32,5 +36,8 @@ class OnetoManyGRU(nn.Module):
             y_k, h_k = self.prediction_head(x_k, h_k)
             y_out.append(y_k)
             x_k = y_k
+
+        y = torch.cat(y_out, dim=1)
+        y = self.untokenizer(y)
         
-        return torch.cat(y_out, dim=1)
+        return y
