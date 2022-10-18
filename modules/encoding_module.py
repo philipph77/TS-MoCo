@@ -37,7 +37,8 @@ class plEncodingModule(pl.LightningModule):
         self.save_hyperparameters(ignore=['encoder'])
 
     def forward(self, x):
-        return self.student(x)[0]
+        K = random.randint(1, self.student.max_predict_len)
+        return self.student(x, K)[0]
     
     def configure_optimizers(self):
         return Adam(self.student.parameters(), lr=self.lr)
