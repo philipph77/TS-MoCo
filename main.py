@@ -79,7 +79,7 @@ def main(args):
         ],
         logger=[
             pretrainer_csv_logger,
-            TensorBoardLogger(save_dir=f"{log_dir}/tb/", name=run_name)
+            TensorBoardLogger(save_dir=f"{log_dir}/tb/", name=run_name, log_graph=True, default_hp_metric=False)
         ],
         limit_train_batches=limit_train_batches,
         limit_val_batches=limit_val_batches
@@ -98,7 +98,7 @@ def main(args):
         ],
         logger=[
             supervised_trainer_csv_logger,
-            TensorBoardLogger(save_dir=f"{log_dir}/tb/", name=f"{run_name}_classification")
+            TensorBoardLogger(save_dir=f"{log_dir}/tb/", name=f"{run_name}_classification", log_graph=True, default_hp_metric=False)
         ],
         limit_train_batches=limit_train_batches,
         limit_val_batches=limit_val_batches,
