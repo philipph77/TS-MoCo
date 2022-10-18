@@ -14,6 +14,7 @@ class plEncodingModule(pl.LightningModule):
     def __init__(self, encoder, batch_size, lr=1e-4, tau=0.9, lam=1.0, masking_percentage=0.5, masking_method="random", num_workers=0):
         assert masking_method in ['random', 'channel_wise', 'temporal']
         super().__init__()
+        self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.student = encoder
         self.teacher = copy.deepcopy(encoder)
         self.lr = lr
@@ -37,8 +38,11 @@ class plEncodingModule(pl.LightningModule):
         self.save_hyperparameters(ignore=['encoder'])
 
     def forward(self, x):
-        K = random.randint(1, self.student.max_predict_len)
-        return self.student(x, K)[0]
+        x_masked = self.masking_func(x, self.masking_percentage)
+        K = 6#random.randint(1, self.student.max_predict_len)
+        c_T, x_pred_T, x_T = self.teacher(x, K)
+        c_S, x_pred_S, x_S = self.student(x_masked, K)
+        return c_S, x_pred_S, x_S, c_T, x_pred_T, x_T
     
     def configure_optimizers(self):
         return Adam(self.student.parameters(), lr=self.lr)

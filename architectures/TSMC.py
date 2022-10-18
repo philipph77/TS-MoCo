@@ -39,9 +39,6 @@ class TSMC(nn.Module):
         tokens = x
         signal, target = self.temporal_split(tokens, K)
         _, context = self.context_encoder(signal)
-        if target.shape[1] > 0:
-            prediction = self.prediction_head(context, K)
-        else:
-            prediction = None
+        prediction = self.prediction_head(context, K)
 
         return context, prediction, target

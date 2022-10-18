@@ -10,6 +10,7 @@ import torchmetrics
 class plClassificationModule(pl.LightningModule):
     def __init__(self, encoder, classifier, batch_size, lr=1e-4, num_workers=0):
         super().__init__()
+        self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.encoder = encoder
         self.encoder.requires_grad_(False)
         self.lr = lr
@@ -24,6 +25,7 @@ class plClassificationModule(pl.LightningModule):
 
     def forward(self, x):
         z, _, _ = self.encoder(x, x.shape[2])
+        z = z.detach()
         return self.classifier(z)
 
     def configure_optimizers(self):
