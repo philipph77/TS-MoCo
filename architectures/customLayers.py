@@ -4,12 +4,17 @@ import torch.nn.functional as F
 import random
 
 class TemporalSplit(nn.Identity):
-    def __init__(self):
+    def __init__(self, split_dim=1):
         super(TemporalSplit, self).__init__()
         self.layer = nn.Identity()
+        self.split_dim = split_dim
 
     def forward(self, input, K):
-        return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])
+        if self.split_dim == 0: return self.layer(input[:-K,:,:]), self.layer(input[-K:,:,:])
+        elif self.split_dim == 1: return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])
+        elif self.split_dim == 2: return self.layer(input[:,:,:-K]), self.layer(input[:,:,-K:])
+        else: raise ValueError("split_dim must be one of [0,1,2], but got {self.split_dim}")
+        
 
 class OnetoManyGRU(nn.Module):
     def __init__(self, embedding_dim: int, output_dim: int, batch_first: bool = True):
