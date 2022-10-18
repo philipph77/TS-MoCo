@@ -23,8 +23,10 @@ class OnetoManyGRU(nn.Module):
         self.batch_first = batch_first
         self.prediction_head = nn.GRU(embedding_dim, embedding_dim, batch_first=batch_first)
         if embedding_dim == output_dim:
+            self.transpose = False
             self.untokenizer = nn.Identity()
         else:
+            self.transpose = True
             self.untokenizer = nn.Linear(embedding_dim, output_dim)
 
     def forward(self, c: torch.Tensor, K: int) -> torch.Tensor:
@@ -44,5 +46,6 @@ class OnetoManyGRU(nn.Module):
 
         y = torch.cat(y_out, dim=1)
         y = self.untokenizer(y)
+        if self.transpose: y = y.transpose(1,2)
         
         return y
