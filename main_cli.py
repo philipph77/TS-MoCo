@@ -21,5 +21,6 @@ if __name__ == "__main__":
     parser.add_argument("es_after_epochs", type=int, help="Number of Epochs without improvement in validation loss to stop the training after")
 
     parser.add_argument("train_val_split",  choices=["random", "subject"], help="whether to split the validation-set randomly or to perform leave one subject out validation")
+    parser.add_argument("normalize_inputs",  type=bool, help="whether or not to apply channel-wise normalization to the inputs")
     args = parser.parse_args()
     main(args)
