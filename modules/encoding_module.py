@@ -27,7 +27,7 @@ class plEncodingModule(pl.LightningModule):
         for name, weight in self.teacher.named_parameters():
                 weight.requires_grad = False
 
-        self.tc_criterion = nn.CosineEmbeddingLoss(reduction="mean")
+        self.tc_criterion = nn.MSELoss(reduction="mean")
         self.cc_criterion = nn.CosineEmbeddingLoss(reduction="mean")
         
         if masking_method == 'random': self.masking_func = random_masking
@@ -68,8 +68,8 @@ class plEncodingModule(pl.LightningModule):
         c_T, x_pred_T, x_T = self.teacher(x, K)
         c_S, x_pred_S, x_S = self.student(x_masked, K)
 
-        loss_tc_S = self.tc_criterion(torch.flatten(x_pred_S, start_dim=1), torch.flatten(x_T, start_dim=1), torch.ones(size=(x.shape[0],), device=x.device))
-        loss_tc_T = self.tc_criterion(torch.flatten(x_pred_T, start_dim=1), torch.flatten(x_S, start_dim=1), torch.ones(size=(x.shape[0],), device=x.device))
+        loss_tc_S = self.tc_criterion(x_pred_S, x_T)
+        loss_tc_T = self.tc_criterion(x_pred_T, x_S)
         loss_cc = self.cc_criterion(torch.flatten(c_S, start_dim=1), torch.flatten(c_T, start_dim=1), torch.ones(size=(x.shape[0],), device=x.device))
 
         loss = loss_tc_S + loss_tc_T + self.lam*loss_cc
