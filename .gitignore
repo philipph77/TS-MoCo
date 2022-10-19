@@ -10,3 +10,4 @@ playground/*
 
 logs
 debug_logs
+device_hyperparameters.json
