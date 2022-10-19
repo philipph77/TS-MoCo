@@ -1,1 +1,1 @@
-python main_cli.py 500 10 10 4 6 1e-4 0.9 1 0.5 channel_wise 100 100 20 random
+python main_cli.py 500 10 10 4 6 1e-4 0.9 1 0.5 temporal 100 100 20 random True

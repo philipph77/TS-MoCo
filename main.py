@@ -36,6 +36,7 @@ def main(args):
     datamodule = SEEDDataModule(
         datapath,
         args.train_val_split,
+        args.normalize_inputs,
         batch_size,
         num_workers
     )
@@ -136,7 +137,8 @@ if __name__ == "__main__":
         "pretrain_epochs": 10,
         "finetune_epochs": 10,
         "es_after_epochs": 20,
-        "train_val_split": "random"
+        "train_val_split": "random",
+        "normalize_inputs": True
         }
 
     main(dotdict(args))

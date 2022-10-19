@@ -1,13 +1,14 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 import torch
+import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torch.utils.data import Subset
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
 class SEEDDataset(Dataset):
-    def __init__(self, datapath, val_split_method="random"):
+    def __init__(self, datapath, val_split_method="random", normalize=False):
         super().__init__()
         assert val_split_method in ["random", "subject"]
         dataset = torch.load(datapath)
@@ -15,6 +16,7 @@ class SEEDDataset(Dataset):
         self.Y = dataset['Y_train'].long()
         self.S = dataset['S_train'].long()
         self.train_indices, self.val_indices = self._train_val_split(val_split_method)
+        if normalize: self._normalize()
 
     def __len__(self):
         return len(self.X)
@@ -32,15 +34,18 @@ class SEEDDataset(Dataset):
             train_indices.append(np.where(np.invert(self.S==val_subject))[0].tolist())
             val_indices.append(np.where(self.S==val_subject)[0].tolist())
             return train_indices[0], val_indices[0]
+    
+    def _normalize(self):
+        self.X = F.normalize(self.X)
 
 
 class SEEDDataModule(pl.LightningDataModule):
-    def __init__(self, datapath, val_split_method, batch_size, num_workers):
+    def __init__(self, datapath, val_split_method, normalize, batch_size, num_workers):
         super().__init__()
         self.datapath = datapath
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.dataset = SEEDDataset(self.datapath, val_split_method)
+        self.dataset = SEEDDataset(self.datapath, val_split_method, normalize)
         self.input_features = 62
         self.n_classes = 3
     
