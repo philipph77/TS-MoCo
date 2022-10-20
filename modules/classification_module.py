@@ -39,10 +39,9 @@ class plClassificationModule(pl.LightningModule):
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.train_accuracy(logits, y)
-        pbar = {'train_acc': self.train_accuracy.compute()}
         self.log("train_loss", loss)
-        self.log("train_acc", self.train_accuracy)
-        return {'loss': loss, 'progress_bar': pbar}
+        self.log("train_acc", self.train_accuracy, prog_bar=True)
+        return {'loss': loss}
 
     def validation_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
@@ -51,17 +50,10 @@ class plClassificationModule(pl.LightningModule):
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.val_accuracy(logits, y)
-        pbar = {'val_acc': self.val_accuracy.compute()}
         self.log("val_loss", loss)
-        self.log("val_acc", self.val_accuracy)
+        self.log("val_acc", self.val_accuracy, prog_bar=True)
         self.log("hp_metric", self.val_accuracy)
-        return {'val_loss': loss, 'progress_bar': pbar}
-
-    def validation_epoch_end(self, val_step_outputs):
-        avg_val_loss = torch.tensor([x['val_loss'] for x in val_step_outputs]).mean()
-        avg_val_acc = self.val_accuracy.compute()
-        pbar = {'avg_val_acc': avg_val_acc}
-        return {'avg_val_loss': avg_val_loss, 'progress_bar': pbar}
+        return {'val_loss': loss}
 
     def test_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
@@ -70,6 +62,5 @@ class plClassificationModule(pl.LightningModule):
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.test_accuracy(logits, y)
-        pbar = {'test_acc': self.test_accuracy.compute()}
-        self.log("test_acc", self.test_accuracy)
-        return {'test_loss': loss, 'progress_bar': pbar}
+        self.log("test_acc", self.test_accuracy, prog_bar=True)
+        return {'test_loss': loss}

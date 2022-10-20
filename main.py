@@ -133,7 +133,7 @@ if __name__ == "__main__":
         "tau": 0.9,
         "lam": 1,
         "masking_percentage": 0.5,
-        "masking_method": "channel_wise",
+        "masking_method": "temporal_window_masking",
         "pretrain_epochs": 10,
         "finetune_epochs": 10,
         "es_after_epochs": 20,

@@ -8,11 +8,11 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Subset
 from torch.utils.data import random_split
 import pytorch_lightning as pl
-from functions.masking import random_masking, channel_wise_masking, temporal_masking
+from functions.masking import random_masking, channel_wise_masking, temporal_masking, temporal_window_masking
 
 class plEncodingModule(pl.LightningModule):
     def __init__(self, encoder, batch_size, lr=1e-4, tau=0.9, lam=1.0, masking_percentage=0.5, masking_method="random", num_workers=0):
-        assert masking_method in ['random', 'channel_wise', 'temporal']
+        assert masking_method in ['random', 'channel_wise', 'temporal', 'temporal_window_masking']
         super().__init__()
         self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.student = encoder
@@ -33,6 +33,7 @@ class plEncodingModule(pl.LightningModule):
         if masking_method == 'random': self.masking_func = random_masking
         elif masking_method == 'channel_wise': self.masking_func = channel_wise_masking
         elif masking_method == 'temporal': self.masking_func = temporal_masking
+        elif masking_method == 'temporal_window_masking': self.masking_func = temporal_window_masking
         else: raise ValueError(f'masking_method must be one of random, channel_wise, temporal but got {masking_method}')
         
         self.save_hyperparameters(ignore=['encoder'])

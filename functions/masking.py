@@ -1,3 +1,4 @@
+import random
 import torch
 import torch.nn.functional as F
 
@@ -23,4 +24,14 @@ def temporal_masking(x, masking_percentage):
         masked_share = sum(masked_indices) / len(masked_indices)
     x_masked = torch.clone(x.detach())
     x_masked[:,:,masked_indices] = 0
+    return x_masked
+
+def temporal_window_masking(x, masking_percentage):
+    indices_to_mask = int(masking_percentage*x.shape[-1])
+    x_masked = torch.clone(x.detach())
+    start_idx = random.randint(0, x_masked.shape[-1])
+    end_idx = min(int(start_idx+masking_percentage*x_masked.shape[-1]), x_masked.shape[-1])
+    x_masked[:,:, start_idx:end_idx] = 0
+    if (end_idx-start_idx) < indices_to_mask:
+        x_masked[:,:, :indices_to_mask-((end_idx-start_idx))] = 0
     return x_masked

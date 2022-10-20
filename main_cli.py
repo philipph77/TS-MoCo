@@ -15,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("tau", type=float, help="momentum value")
     parser.add_argument("lam", type=float, help="loss weight")
     parser.add_argument("masking_percentage", type=restricted_float, help="percentage of the input that shall be masked")
-    parser.add_argument("masking_method", choices=["random", "channel_wise", "temporal"], help="witch masking algorithm shall be used")
+    parser.add_argument("masking_method", choices=["random", "channel_wise", "temporal", "temporal_window_masking"], help="witch masking algorithm shall be used")
     parser.add_argument("pretrain_epochs", type=int, help="number of epochs for self-supervised pretraining")
     parser.add_argument("finetune_epochs", type=int, help="number of epochs for supervised fine-tuning")
     parser.add_argument("es_after_epochs", type=int, help="Number of Epochs without improvement in validation loss to stop the training after")
