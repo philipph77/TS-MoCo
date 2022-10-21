@@ -17,9 +17,10 @@ class TemporalSplit(nn.Identity):
         
 
 class OnetoManyGRU(nn.Module):
-    def __init__(self, embedding_dim: int, output_dim: int, batch_first: bool = True):
+    def __init__(self, embedding_dim: int, output_dim: int, teacher_forcing: bool = True, batch_first: bool = True):
         super(OnetoManyGRU, self).__init__()
         self.embedding_dim = embedding_dim
+        self.teacher_forcing = teacher_forcing
         self.batch_first = batch_first
         self.prediction_head = nn.GRU(embedding_dim, embedding_dim, batch_first=batch_first)
         if embedding_dim == output_dim:
@@ -29,7 +30,7 @@ class OnetoManyGRU(nn.Module):
             self.transpose = True
             self.untokenizer = nn.Linear(embedding_dim, output_dim)
 
-    def forward(self, c: torch.Tensor, K: int) -> torch.Tensor:
+    def forward(self, c: torch.Tensor, K: int, x: torch.Tensor = None) -> torch.Tensor:
         if self.batch_first:
             batch_size = c.size(0)    
             x_k = torch.zeros(batch_size, 1, self.embedding_dim, device=c.device)
@@ -42,10 +43,18 @@ class OnetoManyGRU(nn.Module):
         for k in range(K):
             y_k, h_k = self.prediction_head(x_k, h_k)
             y_out.append(y_k)
-            x_k = y_k
+            if self.teacher_forcing:
+                x_k = x[:,:,-K+k:-K+k+1].transpose(1,2)
+            else:
+                x_k = y_k
 
         y = torch.cat(y_out, dim=1)
-        y = self.untokenizer(y)
+        
+        if self.teacher_forcing:
+          y = y.transpose(1,2)  
+        else:
+            y = self.untokenizer(y)
+        
         if self.transpose: y = y.transpose(1,2)
         
         return y

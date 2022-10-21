@@ -31,6 +31,7 @@ class TSMC(nn.Module):
         self.prediction_head = OnetoManyGRU(
             embedding_dim,
             input_features,#embedding_dim,
+            teacher_forcing = True,
             batch_first=True
         )
 
@@ -39,6 +40,6 @@ class TSMC(nn.Module):
         tokens = x
         signal, target = self.temporal_split(tokens, K)
         _, context = self.context_encoder(signal)
-        prediction = self.prediction_head(context, K)
+        prediction = self.prediction_head(context, K, x[:,:,-K:])
 
         return context, prediction, target
