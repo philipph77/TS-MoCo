@@ -124,9 +124,9 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "embedding_dim": 50,
-        "n_head_token_enc": 10,
-        "n_head_context_enc": 10,
+        "embedding_dim": 62,
+        "n_head_token_enc": 31,
+        "n_head_context_enc": 31,
         "depth_context_enc": 4,
         "max_predict_len": 6,
         "lr": 1e-4,
