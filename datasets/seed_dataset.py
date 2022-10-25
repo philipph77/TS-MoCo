@@ -63,10 +63,10 @@ class SEEDDataModule(pl.LightningDataModule):
 if __name__ == "__main__":
     datapath = "../Datasets/SEED_full_train.pt"
     #dataset = SEEDDataset(datapath, "random")
-    datamodule = SEEDDataModule(datapath, "random", 64, 1)
+    datamodule = SEEDDataModule(datapath, "random", True, 64, 1)
     datamodule.setup(None)
     trainloader = datamodule.train_dataloader()
     for x, y in trainloader:
-        #print(x.shape)
-        #print(y.shape)
+        print(x.shape)
+        print(y.shape)
         break
