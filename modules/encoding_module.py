@@ -14,7 +14,7 @@ class plEncodingModule(pl.LightningModule):
     def __init__(self, encoder, batch_size, lr=1e-4, tau=0.9, lam=1.0, masking_percentage=0.5, masking_method="random", num_workers=0):
         assert masking_method in ['random', 'channel_wise', 'temporal', 'temporal_window_masking']
         super().__init__()
-        self.example_input_array = torch.randn(size=(batch_size, 62, 400))
+        #self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.student = encoder
         self.teacher = copy.deepcopy(encoder)
         self.lr = lr
