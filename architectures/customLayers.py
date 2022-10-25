@@ -10,10 +10,18 @@ class TemporalSplit(nn.Identity):
         self.split_dim = split_dim
 
     def forward(self, input, K):
-        if self.split_dim == 0: return self.layer(input[:-K,:,:]), self.layer(input[-K:,:,:])
-        elif self.split_dim == 1: return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])
-        elif self.split_dim == 2: return self.layer(input[:,:,:-K]), self.layer(input[:,:,-K:])
-        else: raise ValueError(f"split_dim must be one of [0,1,2], but got {self.split_dim}")
+        if K == 0:
+            if self.split_dim == 0: return self.layer(input[:,:,:]), self.layer(input[-1:,:,:])
+            elif self.split_dim == 1: return self.layer(input[:,:,:]), self.layer(input[:,-1:,:])
+            elif self.split_dim == 2: return self.layer(input[:,:,:]), self.layer(input[:,:,-1:])
+            else: raise ValueError(f"split_dim must be one of [0,1,2], but got {self.split_dim}")
+        else:
+            if self.split_dim == 0: return self.layer(input[:-K,:,:]), self.layer(input[-K:,:,:])
+            elif self.split_dim == 1: return self.layer(input[:,:-K,:]), self.layer(input[:,-K:,:])
+            elif self.split_dim == 2: return self.layer(input[:,:,:-K]), self.layer(input[:,:,-K:])
+            else: raise ValueError(f"split_dim must be one of [0,1,2], but got {self.split_dim}")
+            
+
         
 
 class OnetoManyGRU(nn.Module):
@@ -31,6 +39,7 @@ class OnetoManyGRU(nn.Module):
             self.untokenizer = nn.Linear(embedding_dim, output_dim)
 
     def forward(self, c: torch.Tensor, K: int, x: torch.Tensor = None) -> torch.Tensor:
+        if K == 0: return torch.zeros((x.size(0), x.size(1), 0))
         if self.batch_first:
             batch_size = c.size(0)    
             x_k = torch.zeros(batch_size, 1, self.embedding_dim, device=c.device)
