@@ -15,6 +15,8 @@ class UCIHARDataModule(pl.LightningDataModule):
         self.test_data = torch.load(os.path.join(datapath, "test.pt"))
         self.batch_size = batch_size
         self.num_workers = num_workers
+        self.input_features = 9
+        self.n_classes = 6
 
         
         self.X_train = self.train_data['samples'].float()
