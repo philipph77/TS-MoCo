@@ -10,7 +10,7 @@ import torchmetrics
 class plClassificationModule(pl.LightningModule):
     def __init__(self, encoder, classifier, batch_size, lr=1e-4, num_workers=0):
         super().__init__()
-        self.example_input_array = torch.randn(size=(batch_size, 62, 400))
+        #self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.encoder = encoder
         self.encoder.requires_grad_(False)
         self.lr = lr
@@ -24,7 +24,7 @@ class plClassificationModule(pl.LightningModule):
         self.save_hyperparameters(ignore=['encoder', 'classifier'])
 
     def forward(self, x):
-        z, _, _ = self.encoder(x, x.shape[2])
+        z, _, _ = self.encoder(x, 0)
         z = z.detach()
         return self.classifier(z)
 
@@ -34,7 +34,7 @@ class plClassificationModule(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
         # y = y[torch.randperm(y.shape[0])] # only use for debugging purpose (shuffles the labels)
-        z, _, _ = self.encoder(x, x.shape[2])
+        z, _, _ = self.encoder(x, 0)
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
@@ -45,7 +45,7 @@ class plClassificationModule(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
-        z, _, _ = self.encoder(x, x.shape[2])
+        z, _, _ = self.encoder(x, 0)
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
@@ -57,7 +57,7 @@ class plClassificationModule(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
-        z, _, _ = self.encoder(x, x.shape[2])
+        z, _, _ = self.encoder(x, 0)
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
