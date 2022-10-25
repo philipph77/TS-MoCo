@@ -7,15 +7,15 @@ class TSMC(nn.Module):
     def __init__(self, input_features: int, embedding_dim: int, n_head_token_enc: int, n_head_context_enc: int, depth_context_enc: int, max_predict_len: int) -> None:
         super(TSMC, self).__init__()
         self.max_predict_len = max_predict_len
-        self.token_encoder = TransformerEncoder(
-            use_tokenizer=True,
-            use_cls_token=False,
-            use_pos_embedding=True,
-            input_features=input_features,
-            embedding_dim=embedding_dim,
-            n_head=n_head_token_enc,
-            depth=1
-        )
+        # self.token_encoder = TransformerEncoder(
+        #     use_tokenizer=True,
+        #     use_cls_token=False,
+        #     use_pos_embedding=True,
+        #     input_features=input_features,
+        #     embedding_dim=embedding_dim,
+        #     n_head=n_head_token_enc,
+        #     depth=1
+        # )
         self.context_encoder = TransformerEncoder(
             use_tokenizer=True,#False,
             use_cls_token=True,
