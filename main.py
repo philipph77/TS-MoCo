@@ -23,7 +23,6 @@ def main(args):
     pl.seed_everything(33)
 
     ### CONFIG AND HYPERPARAMETERS
-    run_name = "single_source"
     with open("device_hyperparameters.json") as f:
         device_params = json.load(f)
     log_dir = device_params['log_dir']
@@ -34,6 +33,7 @@ def main(args):
     limit_test_batches = device_params['limit_test_batches']
 
     if args.dataset=="SEED":
+        run_name = "emotion_recognition"
         datamodule = SEEDDataModule(
             device_params["ss_datapath"],
             args.train_val_split,
@@ -42,6 +42,7 @@ def main(args):
             num_workers
         )
     elif args.dataset=="UCIHAR":
+        run_name = "activity_recognition"
         datamodule = UCIHARDataModule(
             device_params["ss_ucihar_datapath"],
             batch_size,
