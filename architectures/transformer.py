@@ -14,6 +14,7 @@ class TransformerEncoder(nn.Module):
         encoder_layer = nn.TransformerEncoderLayer(d_model=embedding_dim, nhead=n_head, batch_first=True)
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
         self.activations = [None] * len(self.transformer_encoder.layers)
+        if use_cls_token: self.cls_token = nn.Parameter( torch.randn(1, 1, embedding_dim) )
 
     def forward(self, x: torch.tensor, src_key_padding_mask: torch.tensor = None) -> torch.tensor:
         if self.use_tokenizer:
@@ -24,8 +25,8 @@ class TransformerEncoder(nn.Module):
             # x must already be of shape (B, T, F)
             tokens = self.tokenizer(x)
         if self.use_cls_token:
-            cls_token = torch.randn((tokens.shape[0], 1, tokens.shape[-1]), device=tokens.device)
-            tokens = torch.column_stack((cls_token, tokens))
+            tokens = torch.cat([self.cls_token.expand(x.shape[0], -1, -1), x], dim=1) #tokens is of shape [B, 1+T, F]
+            
         tokens = self.positional_encoding_layer(tokens)
         h = self.transformer_encoder(tokens, src_key_padding_mask=src_key_padding_mask)
         return h, h[:,0,:]
