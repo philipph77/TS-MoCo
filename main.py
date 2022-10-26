@@ -11,6 +11,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
 from architectures.TSMC import TSMC
 from architectures.classifier import DenseClassifier
+from datasets.UCIHAR_dataset import UCIHARDataModule
 from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
@@ -26,21 +27,28 @@ def main(args):
     with open("device_hyperparameters.json") as f:
         device_params = json.load(f)
     log_dir = device_params['log_dir']
-    datapath = device_params["ss_datapath"]
     num_workers = device_params['num_workers']
     batch_size = device_params['ss_batch_size']
     limit_train_batches = device_params['limit_train_batches']
     limit_val_batches = device_params['limit_val_batches']
     limit_test_batches = device_params['limit_test_batches']
 
-    datamodule = SEEDDataModule(
-        datapath,
-        args.train_val_split,
-        args.normalize_inputs,
-        batch_size,
-        num_workers
-    )
-
+    if args.dataset=="SEED":
+        datamodule = SEEDDataModule(
+            device_params["ss_datapath"],
+            args.train_val_split,
+            args.normalize_inputs,
+            batch_size,
+            num_workers
+        )
+    elif args.dataset=="UCIHAR":
+        datamodule = UCIHARDataModule(
+            device_params["ss_ucihar_datapath"],
+            batch_size,
+            num_workers
+        )
+    else:
+        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR"], but got {args.dataset}')
     encoder = TSMC(
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
@@ -83,7 +91,7 @@ def main(args):
             TensorBoardLogger(save_dir=f"{log_dir}/tb/", name=run_name, log_graph=False, default_hp_metric=False)
         ],
         limit_train_batches=limit_train_batches,
-        limit_val_batches=limit_val_batches
+        limit_val_batches=limit_val_batches,
     )
 
     supervised_trainer_checkpoint_callback = ModelCheckpoint(monitor="val_loss",dirpath=f"{log_dir}/checkpoints/{run_name}_classification", save_last=True)
@@ -124,9 +132,10 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "embedding_dim": 62,
-        "n_head_token_enc": 31,
-        "n_head_context_enc": 31,
+        "dataset": "UCIHAR",
+        "embedding_dim": 9,
+        "n_head_token_enc": 3,
+        "n_head_context_enc": 3,
         "depth_context_enc": 4,
         "max_predict_len": 6,
         "lr": 1e-4,

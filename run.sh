@@ -1,1 +1,1 @@
-python main_cli.py 62 31 31 4 6 1e-4 0.9 1 0.5 temporal_window_masking 100 100 20 random True
+python main_cli.py "UCIHAR" 9 3 3 4 6 1e-4 0.9 1 0.5 temporal_window_masking 100 100 20 random True
