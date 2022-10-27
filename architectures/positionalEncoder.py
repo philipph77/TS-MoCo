@@ -30,14 +30,13 @@ class PositionalEncoder(nn.Module):
         # copy pasted from PyTorch tutorial
         position = torch.arange(max_seq_len).unsqueeze(1)
         div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
-        if not self.batch_first:
-            pe = torch.zeros(max_seq_len, 1, d_model)
-            pe[:, 0, 0::2] = torch.sin(position * div_term)
-            pe[:, 0, 1::2] = torch.cos(position * div_term)
+        pe = torch.zeros(max_seq_len, d_model)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term[:d_model//2])
+        if self.batch_first:
+            pe = pe.unsqueeze(0)
         else:
-            pe = torch.zeros(1, max_seq_len, d_model)
-            pe[0, :, 0::2] = torch.sin(position * div_term)
-            pe[0, :, 1::2] = torch.cos(position * div_term)
+            pe = pe.unsqueeze(1)
         self.register_buffer('pe', pe)
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
