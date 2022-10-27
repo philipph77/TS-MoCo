@@ -19,7 +19,7 @@ class TSMC(nn.Module):
         self.context_encoder = TransformerEncoder(
             use_tokenizer=True,#False,
             use_cls_token=True,
-            use_pos_embedding=False,
+            use_pos_embedding=True,
             input_features=input_features,#embedding_dim,
             embedding_dim=embedding_dim,
             n_head=n_head_context_enc,
