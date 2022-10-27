@@ -37,7 +37,7 @@ def main(args):
         datamodule = SEEDDataModule(
             device_params["ss_datapath"],
             args.train_val_split,
-            args.normalize_inputs,
+            args.preprocessing,
             batch_size,
             num_workers
         )
@@ -133,10 +133,10 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "dataset": "UCIHAR",
-        "embedding_dim": 9,
-        "n_head_token_enc": 3,
-        "n_head_context_enc": 3,
+        "dataset": "SEED",
+        "embedding_dim": 62,
+        "n_head_token_enc": 31,
+        "n_head_context_enc": 31,
         "depth_context_enc": 4,
         "max_predict_len": 6,
         "lr": 1e-4,
@@ -144,11 +144,11 @@ if __name__ == "__main__":
         "lam": 1,
         "masking_percentage": 0.5,
         "masking_method": "temporal_window_masking",
-        "pretrain_epochs": 10,
-        "finetune_epochs": 10,
-        "es_after_epochs": 20,
+        "pretrain_epochs": 5,
+        "finetune_epochs": 5,
+        "es_after_epochs": 2,
         "train_val_split": "random",
-        "normalize_inputs": True
+        "preprocessing": "standardize"
         }
 
     main(dotdict(args))

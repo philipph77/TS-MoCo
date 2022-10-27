@@ -4,19 +4,28 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torch.utils.data import Subset
+from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
 class SEEDDataset(Dataset):
-    def __init__(self, datapath, val_split_method="random", normalize=False):
+    def __init__(self, datapath, val_split_method="random", preprocessing="None"):
         super().__init__()
         assert val_split_method in ["random", "subject"]
+        assert preprocessing in ["None", "standardize", "normalize"]
         dataset = torch.load(datapath)
+        testset = torch.load(datapath.replace("train", "test"))
         self.X = dataset['X_train'].float()
         self.Y = dataset['Y_train'].long()
         self.S = dataset['S_train'].long()
+        self.X_test = testset['X_test'].float()
+        self.Y_test = testset['Y_test'].long()
+        self.S_test = testset['S_test'].long()
         self.train_indices, self.val_indices = self._train_val_split(val_split_method)
-        if normalize: self._normalize()
+        if preprocessing=="normalize":
+            self._normalize()
+        elif preprocessing=="standardize":
+            self._standardize()
 
     def __len__(self):
         return len(self.X)
@@ -36,8 +45,16 @@ class SEEDDataset(Dataset):
             return train_indices[0], val_indices[0]
     
     def _normalize(self):
-        self.X = F.normalize(self.X)
+        minimum = torch.min(self.X)
+        maximum = torch.max(self.X)
+        self.X = (self.X - minimum) / (maximum - minimum)
+        self.X_test = (self.X_test - minimum) / (maximum - minimum)
 
+    def _standardize(self):
+        mean = torch.mean(self.X)
+        std = torch.std(self.X)
+        self.X = (self.X-mean) / std
+        self.X_test = (self.X_test-mean) / std
 
 class SEEDDataModule(pl.LightningDataModule):
     def __init__(self, datapath, val_split_method, normalize, batch_size, num_workers):
@@ -52,12 +69,16 @@ class SEEDDataModule(pl.LightningDataModule):
     def setup(self, stage):
         self.trainset = Subset(self.dataset, self.dataset.train_indices)
         self.valset = Subset(self.dataset, self.dataset.val_indices)
+        self.testset = TensorDataset(self.dataset.X_test, self.dataset.Y_test)
 
     def train_dataloader(self):
         return DataLoader(self.trainset, self.batch_size, num_workers=self.num_workers, pin_memory=True, shuffle=True)
 
     def val_dataloader(self):
         return DataLoader(self.valset, self.batch_size, num_workers=self.num_workers, pin_memory=True)
+
+    def val_dataloader(self):
+        return DataLoader(self.testset, self.batch_size, num_workers=self.num_workers, pin_memory=True)
 
 
 if __name__ == "__main__":
