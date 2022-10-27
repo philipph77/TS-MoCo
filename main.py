@@ -130,13 +130,16 @@ def main(args):
     with open(os.path.join(supervised_trainer_csv_logger.log_dir,'best_model_path.txt'), 'w') as f:
         f.write(supervised_trainer_checkpoint_callback.best_model_path)
 
+    results = supervised_trainer.test(enc_classifier, datamodule)
+    return results[0]['test_acc']
+
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "dataset": "SEED",
-        "embedding_dim": 62,
-        "n_head_token_enc": 31,
-        "n_head_context_enc": 31,
+        "dataset": "UCIHAR",
+        "embedding_dim": 9,
+        "n_head_token_enc": 3,
+        "n_head_context_enc": 3,
         "depth_context_enc": 4,
         "max_predict_len": 6,
         "lr": 1e-4,
@@ -144,9 +147,9 @@ if __name__ == "__main__":
         "lam": 1,
         "masking_percentage": 0.5,
         "masking_method": "temporal_window_masking",
-        "pretrain_epochs": 5,
-        "finetune_epochs": 5,
-        "es_after_epochs": 2,
+        "pretrain_epochs": 1,
+        "finetune_epochs": 1,
+        "es_after_epochs": 1,
         "train_val_split": "random",
         "preprocessing": "standardize"
         }
