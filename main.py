@@ -16,8 +16,11 @@ from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
 from utils.restricted_float import restricted_float
+from knockknock import email_sender
+from dotenv import load_dotenv
 
-
+load_dotenv()
+#@email_sender(recipient_emails=[os.environ.get("recipient_emails")], sender_email=os.environ.get("sender_email"))
 def main(args):
     logging.getLogger("lightning").setLevel(logging.WARNING)
     pl.seed_everything(33)
@@ -115,6 +118,7 @@ def main(args):
         limit_test_batches=limit_test_batches,
     )
 
+    pretrainer_csv_logger.log_dir
     #### START OF PRETRAINING ####
     pretrainer.fit(encoder_module, datamodule)
     
@@ -124,6 +128,7 @@ def main(args):
     encoder_module.load_state_dict(lightning_checkpoint["state_dict"])
     enc_classifier.encoder.load_state_dict(encoder_module.student.state_dict())
 
+    supervised_trainer_csv_logger.log_dir
     #### START OF FINE-TUNING ####
     supervised_trainer.fit(enc_classifier, datamodule)
     
