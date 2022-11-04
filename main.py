@@ -48,6 +48,7 @@ def main(args):
         run_name = "activity_recognition"
         datamodule = UCIHARDataModule(
             device_params["ss_ucihar_datapath"],
+            args.preprocessing,
             batch_size,
             num_workers
         )

@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
 class UCIHARDataModule(pl.LightningDataModule):
-    def __init__(self, datapath, batch_size, num_workers):
+    def __init__(self, datapath, preprocessing, batch_size, num_workers):
         super().__init__()
         self.train_data = torch.load(os.path.join(datapath, "train.pt"))
         self.val_data = torch.load(os.path.join(datapath, "val.pt"))
@@ -27,6 +27,11 @@ class UCIHARDataModule(pl.LightningDataModule):
 
         self.X_test = self.test_data['samples'].float()
         self.Y_test = self.test_data['labels'].long()
+
+        if preprocessing=="normalize":
+            self._normalize()
+        elif preprocessing=="standardize":
+            self._standardize()
     
     def setup(self, stage):
         self.trainset = TensorDataset(self.X_train, self.Y_train)
@@ -41,6 +46,20 @@ class UCIHARDataModule(pl.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(self.testset, self.batch_size, num_workers=self.num_workers, pin_memory=True)
+
+    def _normalize(self):
+        minimum = torch.min(self.X_train)
+        maximum = torch.max(self.X_train)
+        self.X_train = (self.X_train - minimum) / (maximum - minimum)
+        self.X_val = (self.X_val - minimum) / (maximum - minimum)
+        self.X_test = (self.X_test - minimum) / (maximum - minimum)
+
+    def _standardize(self):
+        mean = torch.mean(self.X_train)
+        std = torch.std(self.X_train)
+        self.X_train = (self.X_train-mean) / std
+        self.X_val = (self.X_val-mean) / std
+        self.X_test = (self.X_test-mean) / std
 
 
 if __name__ == "__main__":
