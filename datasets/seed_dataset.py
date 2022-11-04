@@ -57,12 +57,12 @@ class SEEDDataset(Dataset):
         self.X_test = (self.X_test-mean) / std
 
 class SEEDDataModule(pl.LightningDataModule):
-    def __init__(self, datapath, val_split_method, normalize, batch_size, num_workers):
+    def __init__(self, datapath, val_split_method, preprocessing, batch_size, num_workers):
         super().__init__()
         self.datapath = datapath
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.dataset = SEEDDataset(self.datapath, val_split_method, normalize)
+        self.dataset = SEEDDataset(self.datapath, val_split_method, preprocessing)
         self.input_features = 62
         self.n_classes = 3
     
