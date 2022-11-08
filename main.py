@@ -41,6 +41,7 @@ def main(args):
             device_params["ss_datapath"],
             args.train_val_split,
             args.preprocessing,
+            "emotion",
             batch_size,
             num_workers
         )
@@ -52,8 +53,18 @@ def main(args):
             batch_size,
             num_workers
         )
+    elif args.dataset=="SEEDUC":
+        run_name = "user_recognition"
+        datamodule = SEEDDataModule(
+            device_params["ss_datapath"],
+            args.train_val_split,
+            args.preprocessing,
+            "userID",
+            batch_size,
+            num_workers
+        )
     else:
-        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR"], but got {args.dataset}')
+        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC"], but got {args.dataset}')
     encoder = TSMC(
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
@@ -142,10 +153,10 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "dataset": "UCIHAR",
-        "embedding_dim": 9,
-        "n_head_token_enc": 3,
-        "n_head_context_enc": 3,
+        "dataset": "SEEDUC",
+        "embedding_dim": 62,
+        "n_head_token_enc": 31,
+        "n_head_context_enc": 31,
         "depth_context_enc": 4,
         "max_predict_len": 6,
         "lr": 1e-4,
