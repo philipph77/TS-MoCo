@@ -16,10 +16,10 @@ from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
 from utils.restricted_float import restricted_float
-from knockknock import email_sender
-from dotenv import load_dotenv
+#from knockknock import email_sender
+#from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 #@email_sender(recipient_emails=[os.environ.get("recipient_emails")], sender_email=os.environ.get("sender_email"))
 def main(args):
     logging.getLogger("lightning").setLevel(logging.WARNING)
@@ -147,8 +147,8 @@ def main(args):
     with open(os.path.join(supervised_trainer_csv_logger.log_dir,'best_model_path.txt'), 'w') as f:
         f.write(supervised_trainer_checkpoint_callback.best_model_path)
 
-    results = supervised_trainer.test(enc_classifier, datamodule)
-    return results[0]['test_acc']
+    #results = supervised_trainer.test(enc_classifier, datamodule)
+    #return results[0]['test_acc']
 
 if __name__ == "__main__":
     from utils.dotdict import dotdict
