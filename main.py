@@ -12,6 +12,7 @@ from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
 from architectures.TSMC import TSMC
 from architectures.classifier import DenseClassifier
 from datasets.UCIHAR_dataset import UCIHARDataModule
+from datasets.cho2017_dataset import Cho2017DataModule
 from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
@@ -63,8 +64,16 @@ def main(args):
             batch_size,
             num_workers
         )
+    elif args.dataset=="Cho2017":
+        run_name = "motor_imagery"
+        datamodule = Cho2017DataModule(
+            device_params["ss_mi_datapath"],
+            args.preprocessing,
+            batch_size,
+            num_workers
+        )
     else:
-        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC"], but got {args.dataset}')
+        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC", "Cho2017"], but got {args.dataset}')
     encoder = TSMC(
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
@@ -153,11 +162,11 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "dataset": "SEEDUC",
-        "embedding_dim": 62,
-        "n_head_token_enc": 31,
-        "n_head_context_enc": 31,
-        "depth_context_enc": 4,
+        "dataset": "Cho2017",
+        "embedding_dim": 64,
+        "n_head_token_enc": 2,
+        "n_head_context_enc": 2,
+        "depth_context_enc": 1,
         "max_predict_len": 6,
         "lr": 1e-4,
         "tau": 0.9,
