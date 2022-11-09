@@ -31,7 +31,6 @@ def main(args):
         device_params = json.load(f)
     log_dir = device_params['log_dir']
     num_workers = device_params['num_workers']
-    batch_size = device_params['ss_batch_size']
     limit_train_batches = device_params['limit_train_batches']
     limit_val_batches = device_params['limit_val_batches']
     limit_test_batches = device_params['limit_test_batches']
@@ -43,7 +42,7 @@ def main(args):
             args.train_val_split,
             args.preprocessing,
             "emotion",
-            batch_size,
+            device_params['ss_batch_size'],
             num_workers
         )
     elif args.dataset=="UCIHAR":
@@ -51,7 +50,7 @@ def main(args):
         datamodule = UCIHARDataModule(
             device_params["ss_ucihar_datapath"],
             args.preprocessing,
-            batch_size,
+            device_params['ss_har_batch_size'],
             num_workers
         )
     elif args.dataset=="SEEDUC":
@@ -61,7 +60,7 @@ def main(args):
             args.train_val_split,
             args.preprocessing,
             "userID",
-            batch_size,
+            device_params['ss_uc_batch_size'],
             num_workers
         )
     elif args.dataset=="Cho2017":
@@ -69,7 +68,7 @@ def main(args):
         datamodule = Cho2017DataModule(
             device_params["ss_mi_datapath"],
             args.preprocessing,
-            batch_size,
+            device_params['ss_mi_batch_size'],
             num_workers
         )
     else:
@@ -86,7 +85,7 @@ def main(args):
 
     encoder_module = plEncodingModule(
         encoder,
-        batch_size,
+        datamodule.batch_size,
         args.lr,
         args.tau,
         args.lam,
@@ -97,7 +96,7 @@ def main(args):
     enc_classifier = plClassificationModule(
         copy.deepcopy(encoder),
         classifier,
-        batch_size,
+        datamodule.batch_size,
         args.lr,
         num_workers
     )
