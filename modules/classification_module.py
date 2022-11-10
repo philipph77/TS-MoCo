@@ -17,10 +17,18 @@ class plClassificationModule(pl.LightningModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.classifier = classifier
-        self.criterion = nn.CrossEntropyLoss()
-        self.train_accuracy = torchmetrics.Accuracy()
-        self.val_accuracy = torchmetrics.Accuracy()
-        self.test_accuracy = torchmetrics.Accuracy()
+        if self.classifier.classifier.out_features == 1:
+            self.criterion = nn.MSELoss()
+            self.train_metric = torchmetrics.R2Score()
+            self.val_metric = torchmetrics.R2Score()
+            self.test_metric = torchmetrics.R2Score()
+            self.metric_name = "R2"
+        else:
+            self.criterion = nn.CrossEntropyLoss()
+            self.train_metric = torchmetrics.Accuracy()
+            self.val_metric = torchmetrics.Accuracy()
+            self.test_metric = torchmetrics.Accuracy()
+            self.metric_name = "acc"
         self.save_hyperparameters(ignore=['encoder', 'classifier'])
 
     def forward(self, x):
@@ -38,9 +46,9 @@ class plClassificationModule(pl.LightningModule):
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
-        self.train_accuracy(logits, y)
+        self.train_metric(logits, y)
         self.log("train_loss", loss)
-        self.log("train_acc", self.train_accuracy, prog_bar=True)
+        self.log(f"train_{self.metric_name}", self.train_metric, prog_bar=True)
         return {'loss': loss}
 
     def validation_step(self, batch, batch_idx):
@@ -49,10 +57,11 @@ class plClassificationModule(pl.LightningModule):
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
-        self.val_accuracy(logits, y)
+        self.val_metric(logits, y)
+
         self.log("val_loss", loss)
-        self.log("val_acc", self.val_accuracy, prog_bar=True)
-        self.log("hp_metric", self.val_accuracy)
+        self.log(f"val_{self.metric_name}", self.val_metric, prog_bar=True)
+        self.log("hp_metric", self.val_metric)
         return {'val_loss': loss}
 
     def test_step(self, batch, batch_idx):
@@ -61,6 +70,6 @@ class plClassificationModule(pl.LightningModule):
         z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
-        self.test_accuracy(logits, y)
-        self.log("test_acc", self.test_accuracy, prog_bar=True)
+        self.test_metric(logits, y)
+        self.log(f"test_{self.metric_name}", self.test_metric, prog_bar=True)
         return {'test_loss': loss}
