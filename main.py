@@ -16,6 +16,7 @@ from datasets.cho2017_dataset import Cho2017DataModule
 from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
+from datasets.dreamer_dataset import DREAMERDataModule
 from utils.restricted_float import restricted_float
 #from knockknock import email_sender
 #from dotenv import load_dotenv
@@ -71,8 +72,16 @@ def main(args):
             device_params['ss_mi_batch_size'],
             num_workers
         )
+    elif args.dataset=="DREAMER":
+        run_name = "valence_recognition"
+        datamodule = DREAMERDataModule(
+            device_params["ss_vr_datapath"],
+            args.preprocessing,
+            device_params['ss_vr_batch_size'],
+            num_workers
+        )
     else:
-        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC", "Cho2017"], but got {args.dataset}')
+        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC", "Cho2017", "DREAMER"], but got {args.dataset}')
     encoder = TSMC(
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
@@ -161,8 +170,8 @@ def main(args):
 if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
-        "dataset": "Cho2017",
-        "embedding_dim": 64,
+        "dataset": "DREAMER",
+        "embedding_dim": 14,
         "n_head_token_enc": 2,
         "n_head_context_enc": 2,
         "depth_context_enc": 1,
