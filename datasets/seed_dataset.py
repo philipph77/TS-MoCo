@@ -73,8 +73,10 @@ class SEEDDataModule(pl.LightningDataModule):
         self.input_features = 62
         if label == "emotion":
             self.n_classes = 3
+            self.class_names = ["Negative", "Neutral", "Positive"]
         elif label == "userID":
             self.n_classes = 15
+            self.class_name = list(range(15))
         else:
             raise ValueError(f"label must be one of ['emotion','userID'], but got {self.label}")
     
