@@ -17,6 +17,7 @@ class UCIHARDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.input_features = 9
         self.n_classes = 6
+        self.class_names = ["WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"]
 
         
         self.X_train = self.train_data['samples'].float()
