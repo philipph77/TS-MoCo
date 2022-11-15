@@ -16,6 +16,7 @@ from datasets.cho2017_dataset import Cho2017DataModule
 from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
+from datasets.seedIJCAI_dataset import SEEDIJCAIDataModule
 from datasets.dreamer_dataset import DREAMERDataModule
 from utils.restricted_float import restricted_float
 #from knockknock import email_sender
@@ -43,6 +44,14 @@ def main(args):
             args.train_val_split,
             args.preprocessing,
             "emotion",
+            device_params['ss_batch_size'],
+            num_workers
+        )
+    elif args.dataset=="SEEDIJCAI":
+        run_name = "emotion_recognition_ijcai"
+        datamodule = SEEDIJCAIDataModule(
+            device_params['ss_emotion_ijcai_datapath'],
+            args.preprocessing,
             device_params['ss_batch_size'],
             num_workers
         )
@@ -81,7 +90,7 @@ def main(args):
             num_workers
         )
     else:
-        raise ValueError(f'parameter dataset has to be one of ["SEED", "UCIHAR", "SEEDUC", "Cho2017", "DREAMER"], but got {args.dataset}')
+        raise ValueError(f'parameter dataset has to be one of ["SEED", "SEEDIJCAI", "UCIHAR", "SEEDUC", "Cho2017", "DREAMER"], but got {args.dataset}')
     encoder = TSMC(
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
