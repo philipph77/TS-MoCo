@@ -3,14 +3,14 @@ import torch.nn as nn
 from .positionalEncoder import PositionalEncoder
 
 class TransformerEncoder(nn.Module):
-    def __init__(self, use_tokenizer: bool, use_cls_token: bool, use_pos_embedding: bool, input_features: int, embedding_dim: int, n_head: int, depth: int) -> None:
+    def __init__(self, use_tokenizer: bool, use_cls_token: bool, pos_embeddings_alpha: float, input_features: int, embedding_dim: int, n_head: int, depth: int) -> None:
         super(TransformerEncoder, self).__init__()
         if not(input_features==embedding_dim) and not use_tokenizer: raise ValueError("Tokenizer must be used if input_features does not match embedding_dim")
         self.use_tokenizer = use_tokenizer
         self.use_cls_token = use_cls_token
-        self.use_pos_embedding = use_pos_embedding
+        self.pos_embeddings_alpha = pos_embeddings_alpha
         self.tokenizer = nn.Linear(input_features, embedding_dim) if self.use_tokenizer else nn.Identity()
-        self.positional_encoding_layer = PositionalEncoder(d_model=embedding_dim, dropout=0.1, batch_first=True) if self.use_pos_embedding else nn.Identity()
+        self.positional_encoding_layer = PositionalEncoder(pos_embeddings_alpha, d_model=embedding_dim, dropout=0.1, batch_first=True)
         encoder_layer = nn.TransformerEncoderLayer(d_model=embedding_dim, nhead=n_head, batch_first=True)
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
         self.activations = [None] * len(self.transformer_encoder.layers)

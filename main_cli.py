@@ -6,6 +6,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a Multi-Source Version of the SSMDR Framework")
     
     parser.add_argument("dataset", choices=["SEED", "SEEDIJCAI", "UCIHAR", "SEEDUC", "Cho2017", "DREAMER"],help="which dataset to use")
+    parser.add_argument("pos_embeddings_alpha", type=float, help="mulitplication factor for the positional embedding vector")
     parser.add_argument("embedding_dim", type=int, help="mumber of features in the latent representation")
     parser.add_argument("n_head_token_enc", type=int, help="number of heads of the token encoder")
     parser.add_argument("n_head_context_enc", type=int, help="number of heads of the context encoder")

@@ -15,7 +15,7 @@ class PositionalEncoder(nn.Module):
     https://pytorch.org/tutorials/beginner/transformer_tutorial.html
     """
 
-    def __init__(self, dropout: float=0.1, max_seq_len: int=5000, d_model: int=512, batch_first: bool=False):
+    def __init__(self, pos_embeddings_alpha: int=1, dropout: float=0.1, max_seq_len: int=5000, d_model: int=512, batch_first: bool=False):
         """
         Parameters:
             dropout: the dropout rate
@@ -24,6 +24,7 @@ class PositionalEncoder(nn.Module):
                      (Vaswani et al, 2017)
         """
         super().__init__()
+        self.pos_embeddings_alpha = pos_embeddings_alpha
         self.d_model = d_model
         self.dropout = nn.Dropout(p=dropout)
         self.batch_first = batch_first
@@ -46,9 +47,9 @@ class PositionalEncoder(nn.Module):
                [enc_seq_len, batch_size, dim_val]
         """
         if self.batch_first:
-            x = x + self.pe[:,:x.size(1)]
+            x = x + self.pos_embeddings_alpha*self.pe[:,:x.size(1)]
         else:
-            x = x + self.pe[:x.size(0)]
+            x = x + self.pos_embeddings_alpha*self.pe[:x.size(0)]
         return self.dropout(x)
 
 if __name__ == '__main__':

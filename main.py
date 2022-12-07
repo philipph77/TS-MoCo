@@ -92,6 +92,7 @@ def main(args):
     else:
         raise ValueError(f'parameter dataset has to be one of ["SEED", "SEEDIJCAI", "UCIHAR", "SEEDUC", "Cho2017", "DREAMER"], but got {args.dataset}')
     encoder = TSMC(
+        pos_embeddings_alpha=args.pos_embeddings_alpha,
         input_features=datamodule.input_features,
         embedding_dim=args.embedding_dim,
         n_head_token_enc=args.n_head_token_enc,
@@ -180,6 +181,7 @@ if __name__ == "__main__":
     from utils.dotdict import dotdict
     args = {
         "dataset": "DREAMER",
+        "pos_embeddings_alpha": 0,
         "embedding_dim": 14,
         "n_head_token_enc": 2,
         "n_head_context_enc": 2,
