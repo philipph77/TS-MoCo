@@ -11,13 +11,13 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
 from architectures.TSMC import TSMC
 from architectures.classifier import DenseClassifier
-from datasets.UCIHAR_dataset import UCIHARDataModule
-from datasets.cho2017_dataset import Cho2017DataModule
 from modules.encoding_module import plEncodingModule
 from modules.classification_module import plClassificationModule
 from datasets.seed_dataset import SEEDDataModule
 from datasets.seedIJCAI_dataset import SEEDIJCAIDataModule
 from datasets.dreamer_dataset import DREAMERDataModule
+from datasets.UCIHAR_dataset import UCIHARDataModule
+from datasets.cho2017_dataset import Cho2017DataModule
 from utils.restricted_float import restricted_float
 #from knockknock import email_sender
 #from dotenv import load_dotenv
