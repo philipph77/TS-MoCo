@@ -40,7 +40,10 @@ class plClassificationModule(pl.LightningModule):
         return self.classifier(z)
 
     def configure_optimizers(self):
-        return Adam(self.classifier.parameters(), lr=self.lr)
+        if self.freeze_encoder:
+            return Adam(self.classifier.parameters(), lr=self.lr)
+        else:
+            return Adam(self.parameters(), lr=self.lr)
 
     def training_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
