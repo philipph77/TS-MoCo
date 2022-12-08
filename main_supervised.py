@@ -107,7 +107,8 @@ def main_supervised(args):
         classifier,
         datamodule.batch_size,
         args.lr,
-        num_workers
+        num_workers,
+        freeze_encoder=False
     )
 
     supervised_trainer_checkpoint_callback = ModelCheckpoint(monitor="val_loss",dirpath=f"{log_dir}/checkpoints/{run_name}_classification", save_last=True)

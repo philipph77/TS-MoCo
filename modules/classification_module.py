@@ -8,15 +8,17 @@ import pytorch_lightning as pl
 import torchmetrics
 
 class plClassificationModule(pl.LightningModule):
-    def __init__(self, encoder, classifier, batch_size, lr=1e-4, num_workers=0):
+    def __init__(self, encoder, classifier, batch_size, lr=1e-4, num_workers=0, freeze_encoder=True):
         super().__init__()
         #self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.encoder = encoder
-        self.encoder.requires_grad_(False)
+        self.freeze_encoder = freeze_encoder
         self.lr = lr
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.classifier = classifier
+        if self.freeze_encoder:
+            self.encoder.requires_grad_(False)
         if self.classifier.classifier.out_features == 1:
             self.criterion = nn.MSELoss()
             self.train_metric = torchmetrics.R2Score()
@@ -33,7 +35,8 @@ class plClassificationModule(pl.LightningModule):
 
     def forward(self, x):
         z, _, _ = self.encoder(x, 0)
-        z = z.detach()
+        if self.freeze_encoder:
+            z = z.detach()
         return self.classifier(z)
 
     def configure_optimizers(self):
@@ -43,7 +46,8 @@ class plClassificationModule(pl.LightningModule):
         x, y = batch[0], batch[1]
         # y = y[torch.randperm(y.shape[0])] # only use for debugging purpose (shuffles the labels)
         z, _, _ = self.encoder(x, 0)
-        z = z.detach()
+        if self.freeze_encoder:
+            z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.train_metric(logits, y)
@@ -54,7 +58,8 @@ class plClassificationModule(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
         z, _, _ = self.encoder(x, 0)
-        z = z.detach()
+        if self.freeze_encoder:
+            z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.val_metric(logits, y)
@@ -67,7 +72,8 @@ class plClassificationModule(pl.LightningModule):
     def test_step(self, batch, batch_idx):
         x, y = batch[0], batch[1]
         z, _, _ = self.encoder(x, 0)
-        z = z.detach()
+        if self.freeze_encoder:
+            z = z.detach()
         logits = self.classifier(z)
         loss = self.criterion(logits, y)
         self.test_metric(logits, y)
