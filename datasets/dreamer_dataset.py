@@ -52,7 +52,7 @@ class DREAMERDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.dataset = DREAMERDataset(self.datapath, preprocessing)
         self.input_features = 14
-        self.n_classes = 5
+        self.n_classes = 4
     
     def setup(self, stage):
         self.trainset = TensorDataset(self.dataset.X_train, self.dataset.Y_train)
