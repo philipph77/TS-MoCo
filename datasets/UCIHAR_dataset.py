@@ -10,9 +10,9 @@ import pytorch_lightning as pl
 class UCIHARDataModule(pl.LightningDataModule):
     def __init__(self, datapath, preprocessing, batch_size, num_workers):
         super().__init__()
-        self.train_data = torch.load(os.path.join(datapath, "train.pt"))
-        self.val_data = torch.load(os.path.join(datapath, "val.pt"))
-        self.test_data = torch.load(os.path.join(datapath, "test.pt"))
+        self.train_data = torch.load(os.path.join(datapath, "train_stratified.pt"))
+        self.val_data = torch.load(os.path.join(datapath, "val_stratified.pt"))
+        self.test_data = torch.load(os.path.join(datapath, "test_stratified.pt"))
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.input_features = 9
