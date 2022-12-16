@@ -9,6 +9,7 @@ from torch.utils.data import Subset
 from torch.utils.data import random_split
 import pytorch_lightning as pl
 from functions.masking import random_masking, channel_wise_masking, temporal_masking, temporal_window_masking
+from functions.weight_reset import reset_all_weights
 
 class plEncodingModule(pl.LightningModule):
     def __init__(self, encoder, batch_size, lr=1e-4, tau=0.9, lam=1.0, masking_percentage=0.5, masking_method="random", num_workers=0):
@@ -17,6 +18,7 @@ class plEncodingModule(pl.LightningModule):
         #self.example_input_array = torch.randn(size=(batch_size, 62, 400))
         self.student = encoder
         self.teacher = copy.deepcopy(encoder)
+        reset_all_weights(self.teacher)
         self.lr = lr
         self.batch_size = batch_size
         self.tau = tau
