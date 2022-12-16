@@ -13,12 +13,12 @@ class DREAMERDataset(Dataset):
         super().__init__()
         assert preprocessing in ["None", "standardize", "normalize"]
         dataset = torch.load(datapath)
-        self.X_train = dataset['X_train'].float()
-        self.X_val = dataset['X_val'].float()
-        self.X_test = dataset['X_test'].float()
-        self.Y_train = dataset['Y_train'].long().squeeze()-1
-        self.Y_val = dataset['Y_val'].long().squeeze()-1
-        self.Y_test = dataset['Y_test'].long().squeeze()-1
+        self.X_train = dataset['X_train'].float().swapaxes(1,2)
+        self.X_val = dataset['X_val'].float().swapaxes(1,2)
+        self.X_test = dataset['X_test'].float().swapaxes(1,2)
+        self.Y_train = dataset['Y_train'].long().squeeze()#-1
+        self.Y_val = dataset['Y_val'].long().squeeze()#-1
+        self.Y_test = dataset['Y_test'].long().squeeze()#-1
         if preprocessing=="normalize":
             self._normalize()
         elif preprocessing=="standardize":
@@ -52,7 +52,7 @@ class DREAMERDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.dataset = DREAMERDataset(self.datapath, preprocessing)
         self.input_features = 14
-        self.n_classes = 4
+        self.n_classes = 5
     
     def setup(self, stage):
         self.trainset = TensorDataset(self.dataset.X_train, self.dataset.Y_train)
