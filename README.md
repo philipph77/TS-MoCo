@@ -1,4 +1,5 @@
-# TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning
+<h1>TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning</h1>
+
 Philipp Hallgarten $^{1,2}$,
 David Bethge $^{3}$,
 Ozan Özdenizci $^{4,5}$,
@@ -14,10 +15,9 @@ $^{5}$ TU Graz-SAL DES Lab, Silicon Austria Labs, Graz, Austria<br/>
 <p>This is the accompanying repository for the paper <a href="#"><i>TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning</i></a>, published in <i>tbd</i></p>
 
 <div align="center">
-
-![](https://img.shields.io/badge/READ-THE_PAPER-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=green)
-![](https://img.shields.io/badge/CITE-THIS_WORK-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=blue)
-![](https://img.shields.io/badge/STAR-THIS_REPOSITORY-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=gold)
+    <a href="#"><img src="https://img.shields.io/badge/READ-THE_PAPER-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=green"></a>
+    <a href="citation"><img src="https://img.shields.io/badge/CITE-THIS_WORK-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=blue"></a>
+    <!--<a href="#"><img src="https://img.shields.io/badge/STAR-THIS_REPOSITORY-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=gold"></a>-->
 
 <br/>
 <br/>
