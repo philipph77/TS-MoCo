@@ -9,6 +9,8 @@ playground
 playground/*
 
 logs
+logs_paper
+logs_paper2
 debug_logs
 device_hyperparameters.json
 
