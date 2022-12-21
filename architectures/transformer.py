@@ -25,7 +25,7 @@ class TransformerEncoder(nn.Module):
             # x must already be of shape (B, T, F)
             tokens = self.tokenizer(x)
         if self.use_cls_token:
-            tokens = torch.cat([self.cls_token.expand(x.shape[0], -1, -1), x], dim=1) #tokens is of shape [B, 1+T, F]
+            tokens = torch.cat([self.cls_token.expand(x.shape[0], -1, -1), tokens], dim=1) #tokens is of shape [B, 1+T, F]
             
         tokens = self.positional_encoding_layer(tokens)
         h = self.transformer_encoder(tokens, src_key_padding_mask=src_key_padding_mask)
