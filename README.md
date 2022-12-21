@@ -80,7 +80,7 @@ If you found this work useful, please cite:
 ```
 @inproceedings{tbd,
   title     = {TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning},
-  author    = {Hallgarten, Philipp and Bethge, David and Özdenizci, Ozan and Grosse-Puppendahl, Ozan and Kasneci, Enkelejda},
+  author    = {Hallgarten, Philipp and Bethge, David and Özdenizci, Ozan and Grosse-Puppendahl, Tobias and Kasneci, Enkelejda},
   booktitle = {tbd},
   pages     = {tbd},
   year      = {tbd},
