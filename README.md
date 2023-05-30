@@ -78,11 +78,11 @@ To train <i>TS-MoCo</i> on a custom dataset, you will have to take the follwoing
 If you found this work useful, please cite:
 
 ```
-@inproceedings{tbd,
+@inproceedings{hallgarten2023tsmoco,
   title     = {TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning},
   author    = {Hallgarten, Philipp and Bethge, David and Özdenizci, Ozan and Grosse-Puppendahl, Tobias and Kasneci, Enkelejda},
-  booktitle = {tbd},
+  booktitle = {31th European Signal Processing Conference (EUSIPCO)},
   pages     = {tbd},
-  year      = {tbd},
+  year      = {2023},
 }
 ```
