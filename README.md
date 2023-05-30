@@ -12,7 +12,7 @@ $^{3}$ LMU Munich, Germany<br/>
 $^{4}$ Institute of Theoretical Computer Science, TU Graz, Austria<br/>
 $^{5}$ TU Graz-SAL DES Lab, Silicon Austria Labs, Graz, Austria<br/>
 
-<p>This is the accompanying repository for the paper <a href="#"><i>TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning</i></a>, published in <i>tbd</i></p>
+<p>This is the accompanying repository for the paper <a href="#"><i>TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning</i></a>, published in <i>Proceedings of the 31st European Signal Processing Conference (EUSIPCO)</i></p>
 
 <div align="center">
     <a href="#"><img src="https://img.shields.io/badge/READ-THE_PAPER-informational?style=for-the-badge&logo=<LOGO_NAME>&logoColor=white&color=green"></a>
@@ -81,7 +81,7 @@ If you found this work useful, please cite:
 @inproceedings{hallgarten2023tsmoco,
   title     = {TS-MoCo: Time-Series Momentum Contrast for Self-Supervised Physiological Representation Learning},
   author    = {Hallgarten, Philipp and Bethge, David and Özdenizci, Ozan and Grosse-Puppendahl, Tobias and Kasneci, Enkelejda},
-  booktitle = {31th European Signal Processing Conference (EUSIPCO)},
+  booktitle = {31st European Signal Processing Conference (EUSIPCO)},
   pages     = {tbd},
   year      = {2023},
 }
